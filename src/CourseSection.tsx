@@ -73,7 +73,7 @@ export default function CourseSection(props: MyComponentProps) {
         async function fetchWithRetry<T>(
             url: string,
             retries = 3,
-            delay = 1000
+            delay = 500
         ): Promise<T> {
             let lastError: unknown = null
 
