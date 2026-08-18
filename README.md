@@ -1,6 +1,6 @@
 # SkillPath Course Section
 
-A React + TypeScript course section component that fetches country and course data from two APIs, retries failed requests, and renders localized course pricing.
+A React + TypeScript course section component that fetches country and course data from external API, retries failed requests, and renders localized course pricing.
 
 ## Project Setup
 

@@ -65,6 +65,7 @@ export default function CourseSection(props: MyComponentProps) {
     >(null)
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
+    const [retryCount, setRetryCount] = useState(0)
 
     useEffect(() => {
         let isMounted = true
@@ -144,7 +145,7 @@ export default function CourseSection(props: MyComponentProps) {
         return () => {
             isMounted = false
         }
-    }, [])
+    }, [retryCount])
 
     const sectionStyle = useMemo<CSSProperties>(
         () => ({
@@ -232,6 +233,12 @@ export default function CourseSection(props: MyComponentProps) {
         [cardRadius, countryCode]
     )
 
+    const handleRetry = useCallback(() => {
+        startTransition(() => {
+            setRetryCount((value) => value + 1)
+        })
+    }, [])
+
     return (
         <section data-course-section style={sectionStyle}>
             <style>{`
@@ -298,9 +305,34 @@ export default function CourseSection(props: MyComponentProps) {
             )}
 
             {!isLoading && error && (
-                <p style={{ margin: 0, color: "#FFB4AB", fontWeight: 600 }}>
-                    {error}
-                </p>
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                        gap: 10,
+                    }}
+                >
+                    <p style={{ margin: 0, color: "#FFB4AB", fontWeight: 600 }}>
+                        {error}
+                    </p>
+                    <button
+                        type="button"
+                        onClick={handleRetry}
+                        style={{
+                            border: "1px solid rgba(255,255,255,0.16)",
+                            backgroundColor: "#1A1A20",
+                            color: "#ECEEF6",
+                            borderRadius: 8,
+                            padding: "8px 12px",
+                            fontSize: 13,
+                            lineHeight: 1,
+                            cursor: "pointer",
+                        }}
+                    >
+                        Try again
+                    </button>
+                </div>
             )}
 
             {!isLoading && !error && countryCode && (
