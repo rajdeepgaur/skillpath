@@ -66,6 +66,7 @@ export default function CourseSection(props: MyComponentProps) {
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [retryCount, setRetryCount] = useState(0)
+    const [searchQuery, setSearchQuery] = useState("")
 
     useEffect(() => {
         let isMounted = true
@@ -172,6 +173,22 @@ export default function CourseSection(props: MyComponentProps) {
         [cardGap]
     )
 
+    const filteredCourses = useMemo(() => {
+        const query = searchQuery.trim().toLowerCase()
+
+        if (!query) {
+            return courses
+        }
+
+        return courses.filter((course) => {
+            return (
+                course.courseName.toLowerCase().includes(query) ||
+                course.description.toLowerCase().includes(query) ||
+                course.mainCategory.toLowerCase().includes(query)
+            )
+        })
+    }, [courses, searchQuery])
+
     const renderCourseCard = useCallback(
         (course: Course) => (
             <article
@@ -271,6 +288,27 @@ export default function CourseSection(props: MyComponentProps) {
                 {sectionTitle}
             </h1>
 
+            {!isLoading && !error && (
+                <input
+                    type="search"
+                    placeholder="Search courses"
+                    value={searchQuery}
+                    onChange={(event) => setSearchQuery(event.target.value)}
+                    style={{
+                        width: "100%",
+                        boxSizing: "border-box",
+                        border: "1px solid rgba(255,255,255,0.16)",
+                        backgroundColor: "#1A1A20",
+                        color: "#ECEEF6",
+                        borderRadius: 10,
+                        padding: "10px 12px",
+                        fontSize: 14,
+                        lineHeight: 1.4,
+                        outline: "none",
+                    }}
+                />
+            )}
+
             {isLoading && (
                 <div
                     role="status"
@@ -337,7 +375,7 @@ export default function CourseSection(props: MyComponentProps) {
 
             {!isLoading && !error && countryCode && (
                 <div className="framer-course-grid" style={gridStyle}>
-                    {courses.map(renderCourseCard)}
+                    {filteredCourses.map(renderCourseCard)}
                 </div>
             )}
         </section>
